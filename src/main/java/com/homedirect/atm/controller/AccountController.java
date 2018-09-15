@@ -14,45 +14,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/atm")
+@RequestMapping("/account")
 public class AccountController {
 
     private @Autowired AccountService accountService;
    
     private @Autowired PaymentService paymentService;
 
-    @PostMapping(value = "/account")
-    public AccountResponse add(@Valid @RequestBody AccountRequest request) {
+    @PostMapping(value = "/create")
+    public AccountResponse add(@RequestBody AccountRequest request) {
         return accountService.createAccount(request);
     }
     
     @PostMapping(value = "/signin")
-    public Account signIn(@Valid @RequestBody AccountRequest request) {
+    public AccountResponse signIn(@RequestBody AccountRequest request) {
     	return accountService.signIn(request);
     }
     
     @PostMapping(value = "/resetpassword")
-    public Account changePassword(@Valid @RequestBody PasswordRequest request) {
+    public Account changePassword(@RequestBody PasswordRequest request) {
 		return accountService.changePassword(request);
     }
     
     @GetMapping(value = "/accounts/{id}")
-    public Account showAccount(@PathVariable int id) {
+    public AccountResponse showAccount(@PathVariable int id) {
     	return accountService.getAccountById(id);
     }
     
     @PostMapping(value = "/deposit")
-    public String deposit(@Valid @RequestBody DepositRequest request) {
+    public AccountResponse deposit(@RequestBody DepositRequest request) {
 		return paymentService.deposit(request);
     }
     
     @PostMapping(value = "/withdrawal")
-    public String withdrawal(@Valid @RequestBody WithdrawalRequest request) {
+    public AccountResponse withdrawal(@RequestBody WithdrawalRequest request) {
     	return paymentService.withdrawal(request);
     }
     
     @PostMapping(value = "/transfer")
-    public String transfer(@Valid @RequestBody TransferRequest request) {
+    public AccountResponse transfer(@RequestBody TransferRequest request) {
     	return paymentService.transfer(request);
     }
 }

@@ -8,6 +8,8 @@ import com.homedirect.atm.model.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 	
-	Account findByUsernameAndPassword(String username, String password);
+ 	Account findByUsernameAndPassword(String username, String password);
+
+	Account findById(int id);
 
 }

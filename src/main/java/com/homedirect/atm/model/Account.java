@@ -1,7 +1,5 @@
 package com.homedirect.atm.model;
 
-import com.homedirect.atm.response.AccountResponse;
-
 import javax.persistence.*;
 
 @Entity

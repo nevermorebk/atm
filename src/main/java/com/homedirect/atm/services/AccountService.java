@@ -9,9 +9,9 @@ public interface AccountService {
 
     AccountResponse createAccount(AccountRequest request);
 
-    Account signIn(AccountRequest request);
+    AccountResponse signIn(AccountRequest request);
 
     Account changePassword(PasswordRequest request);
 
-    Account getAccountById(int accountId);
+    AccountResponse getAccountById(int accountId);
 }

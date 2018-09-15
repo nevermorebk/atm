@@ -1,7 +1,5 @@
 package com.homedirect.atm.model;
 
-import com.homedirect.atm.util.NumberUtils;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -98,25 +96,4 @@ public class Transaction {
 		this.requestDatetime = requestDatetime;
 	}
 
-	public String printDeposit() {
-		return "Transaction type:  Deposit " + "   Date: " + requestDatetime + "    Amount: +"
-				+ NumberUtils.formatAmount(amount) + " VND " + "   Status: " + status + "\n";
-	}
-
-	public String printWithdraw() {
-		return "Transaction Type:  Withdraw " + "  Date: " + requestDatetime + "    Amount: -"
-				+ NumberUtils.formatAmount(amount) + " VND " + "    Fee: " + NumberUtils.formatAmount(fee) + " VND "
-				+ "   Status: " + status + " \n";
-	}
-
-	public String printTransfer() {
-		return "Transaction Type:  Transaction " + "  Date: " + requestDatetime + "    Amount: -"
-				+ NumberUtils.formatAmount(amount) + " VND " + "    Fee: " + NumberUtils.formatAmount(fee) + " VND "
-				+ "   Status: " + status + "\n";
-	}
-
-	public String printReceive() {
-		return "Transaction Type:  Receive " + "	from Account ID: " + fromAccount + "   Date: " + requestDatetime
-				+ "   Amount: +" + NumberUtils.formatAmount(amount) + " VND " + "   Status: " + status + "\n";
-	}
 }

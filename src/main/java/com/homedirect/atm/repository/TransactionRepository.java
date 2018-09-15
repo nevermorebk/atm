@@ -9,6 +9,10 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 
+    List<Transaction> getByFromAccount(int id);
+
+    List<Transaction> getByTransactionType(byte type);
+
     List<Transaction> getByFromAccountAndTransactionType(int accountId, byte transactionType);
 
 

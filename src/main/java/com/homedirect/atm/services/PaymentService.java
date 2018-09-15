@@ -3,13 +3,14 @@ package com.homedirect.atm.services;
 import com.homedirect.atm.request.DepositRequest;
 import com.homedirect.atm.request.TransferRequest;
 import com.homedirect.atm.request.WithdrawalRequest;
+import com.homedirect.atm.response.AccountResponse;
 
 public interface PaymentService {
 
-	String withdrawal(WithdrawalRequest request);
+	AccountResponse withdrawal(WithdrawalRequest request);
 
-	String transfer(TransferRequest request);
+	AccountResponse transfer(TransferRequest request);
 
-	String deposit(DepositRequest request);
+	AccountResponse deposit(DepositRequest request);
 }
 

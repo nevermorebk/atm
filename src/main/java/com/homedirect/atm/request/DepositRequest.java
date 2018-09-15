@@ -1,7 +1,5 @@
 package com.homedirect.atm.request;
 
-import javax.validation.constraints.NotBlank;
-
 public class DepositRequest {
 
 	private int id;

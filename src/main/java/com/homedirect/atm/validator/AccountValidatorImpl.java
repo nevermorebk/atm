@@ -1,46 +1,29 @@
 package com.homedirect.atm.validator;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.homedirect.atm.model.Account;
 import org.springframework.stereotype.Component;
-import com.homedirect.atm.util.ScanUtils;
-import static com.homedirect.atm.commons.ConfigConstants.LENGTH_FROM;
-import static com.homedirect.atm.commons.ConfigConstants.LENGTH_TO;
-import static com.homedirect.atm.commons.ConfigConstants.NUMBER_ERROR;
+
+import static com.homedirect.atm.commons.ConfigConstants.*;
 import static com.homedirect.atm.util.StringUtils.isEmpty;
 
 @Component
 public class AccountValidatorImpl implements AccountValidator {
 
-	@Autowired
-	private ScanUtils scanInput;
-
 	@Override
-	public boolean isValidUsername(String username) {
-		if (isEmpty(username) || LENGTH_FROM > username.length() || username.length() > LENGTH_TO) {
-			return false;
-		}
-		return true;
+	public boolean inValidUsername(String username) {
+        return (isEmpty(username) || LENGTH_FROM > username.length() || username.length() > LENGTH_TO);
 	}
 
 	@Override
-	public boolean isValidPassword(String password) {
-		if (isEmpty(password) || LENGTH_FROM > password.length() || password.length() > LENGTH_TO) {
-			return false;
-		}
-		return true;
+	public boolean inValidPassword(String password) {
+            return (isEmpty(password) || LENGTH_FROM > password.length() || password.length() > LENGTH_TO);
 	}
 
-	@Override
-	public boolean isvalidAmount(double amount) {
-		if (amount < 0) {
-			System.out.println("Amount invalid!");
-			return false;
-		}
+	public boolean inValidAmount(double amount) {
+	    return amount > 0;
+    }
 
-		return true;
-	}
-
-	public String inputAndCheckUsername(String username) {
+	private String inputAndCheckUsername(String username) {
 		int count = 0;
 
 		do {
@@ -48,11 +31,11 @@ public class AccountValidatorImpl implements AccountValidator {
 				return null;
 			}
 
-			if (!isValidUsername(username)) {
+			if (inValidUsername(username)) {
 				System.out.println("Username must have be between 3 to 15 characters or Username already exists!");
 				count++;
 			}
-		} while (!isValidUsername(username));
+		} while (inValidUsername(username));
 
 		return username;
 	}
@@ -63,11 +46,33 @@ public class AccountValidatorImpl implements AccountValidator {
 			return false;
 		}
 
-		scanInput.enterPassword(password);
+		checkTheNumberEnterPassword(password);
 		if (password == null) {
 			return false;
 		}
 
 		return true;
 	}
+
+	private String checkTheNumberEnterPassword(String password) {
+		int count = 0;
+		do {
+			System.out.println(" \n Please enter Password: ");
+			if (count == NUMBER_ERROR) {
+				return null;
+			}
+
+			if (inValidPassword(password)) {
+				System.out.println("Password must have be between 3 to 15 characters!");
+				count++;
+			}
+
+		} while (inValidPassword(password));
+
+		return password;
+	}
+
+    public boolean isValidPaymentAmount(Account account, double amount) {
+        return (account.getAmount() - DEFAULT_AMOUNT) < amount && amount > 0;
+    }
 }

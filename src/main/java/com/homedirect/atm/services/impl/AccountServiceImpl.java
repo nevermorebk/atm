@@ -10,9 +10,6 @@ import com.homedirect.atm.services.AccountService;
 import com.homedirect.atm.validator.AccountValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static com.homedirect.atm.commons.ConfigConstants.*;
-
-import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -20,7 +17,8 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountRepository accountRepository;
 
-	private @Autowired AccountValidator accountValidator;
+	@Autowired
+	private AccountValidator accountValidator;
 
 	@Autowired
 	private AccountConverter accountConverter;
@@ -34,10 +32,10 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Account signIn(AccountRequest request) {
+	public AccountResponse signIn(AccountRequest request) {
 			Account account = accountRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
 			if (request.getUsername().equals(account.getUsername()) && request.getPassword().equals(account.getPassword())) {
-				return account;
+				return accountConverter.toResponse(account);
 			}
 			
 		return null;
@@ -45,15 +43,15 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account changePassword(PasswordRequest request) {
-		Optional<Account> account = accountRepository.findById(request.getId());
-		if (!isValidateChangePassword(request.getOldPassword(), account.get())) {
+		Account account = accountRepository.findById(request.getId());
+		if (!isValidateChangePassword(request.getOldPassword(), account)) {
 			System.out.println(" \n You have entered the wrong old password! \n");
 			return null;
 		}
 
-		 account.get().setPassword(request.getNewPassword());
+		 account.setPassword(request.getNewPassword());
 		System.out.println(" \n Change password successfully! \n");
-		return account.get();
+		return account;
 	}
 
 	private boolean isValidateChangePassword(String oldPassword, Account account) {
@@ -61,8 +59,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Account getAccountById(int accountId) {
-		Optional<Account> accountToFind = accountRepository.findById(accountId);
-		return accountToFind.orElse(null);
+	public AccountResponse getAccountById(int accountId) {
+		Account findAccountById = accountRepository.findById(accountId);
+		return accountConverter.toResponse(findAccountById);
 	}
 }
