@@ -1,7 +1,9 @@
 package com.homedirect.atm.services.impl;
 
+import com.homedirect.atm.converter.TransactionConverterNew;
 import com.homedirect.atm.model.Transaction;
 import com.homedirect.atm.repository.TransactionRepository;
+import com.homedirect.atm.response.TransactionReponse;
 import com.homedirect.atm.services.TransactionHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,11 @@ import java.util.List;
 @Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService {
 
-	private @Autowired TransactionRepository transactionRepository;
+	@Autowired
+	private TransactionRepository transactionRepository;
+
+	@Autowired
+	private TransactionConverterNew transactionConverter;
 
 	@Override
 	public void saveTransaction(byte transactionType, int fromAccountId, int toAccountId, double amount, double fee,
@@ -35,7 +41,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 			return transactionRepository.findAll();
 		}
 
-		if(type == null) {
+		if (type == null) {
 			return transactionRepository.getByFromAccount(id);
 		}
 
