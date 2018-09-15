@@ -9,7 +9,6 @@ import com.homedirect.atm.request.WithdrawalRequest;
 import com.homedirect.atm.response.AccountResponse;
 import com.homedirect.atm.services.AccountService;
 import com.homedirect.atm.services.PaymentService;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
