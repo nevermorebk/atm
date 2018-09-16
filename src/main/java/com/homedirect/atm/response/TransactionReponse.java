@@ -11,6 +11,15 @@ public class TransactionReponse {
 	private Date requestDateTime;
 	private double amount;
 	private byte status;
+	private int fee;
+	
+	public int getFee() {
+		return fee;
+	}
+
+	public void setFee(int fee) {
+		this.fee = fee;
+	}
 
 	public int getId() {
 		return id;

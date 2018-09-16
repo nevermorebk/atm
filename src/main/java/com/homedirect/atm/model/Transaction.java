@@ -17,7 +17,7 @@ public class Transaction {
 	private byte status;
 	private Date requestDatetime;
 
-	public class StatusType {
+	public class Status {
 		public static final byte SUCCESS = 1;
 		public static final byte FAILURE = -1;
 	}
@@ -95,5 +95,4 @@ public class Transaction {
 	public void setRequestDatetime(Date requestDatetime) {
 		this.requestDatetime = requestDatetime;
 	}
-
 }

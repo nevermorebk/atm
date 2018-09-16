@@ -1,6 +1,6 @@
 package com.homedirect.atm.services.impl;
 
-import com.homedirect.atm.converter.TransactionConverterNew;
+import com.homedirect.atm.converter.TransactionConverter;
 import com.homedirect.atm.model.Transaction;
 import com.homedirect.atm.repository.TransactionRepository;
 import com.homedirect.atm.response.TransactionReponse;
@@ -16,15 +16,13 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 	@Autowired
 	private TransactionRepository transactionRepository;
 
-	@Autowired
-	private TransactionConverterNew transactionConverter;
+//	@Autowired
+//	private TransactionConverter transactionConverter;
 
 	@Override
-	public void saveTransaction(byte transactionType, int fromAccountId, int toAccountId, double amount, double fee,
-			byte type, byte status) {
+	public Transaction saveTransaction(int fromAccountId, int toAccountId, double amount, double fee, byte type, byte status) {
 		Transaction transaction = new Transaction();
 
-		transaction.setTransactionType(transactionType);
 		transaction.setFromAccount(fromAccountId);
 		transaction.setToAccount(toAccountId);
 		transaction.setAmount(amount);
@@ -32,9 +30,9 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 		transaction.setFee(fee);
 		transaction.setRequestDatetime(new Date());
 		transaction.setStatus(status);
-		transactionRepository.save(transaction);
+		return transactionRepository.save(transaction);
 	}
-
+	
 	@Override
 	public List<Transaction> transactionType(Integer id, Byte type) {
 		if (id == null && type == null) {

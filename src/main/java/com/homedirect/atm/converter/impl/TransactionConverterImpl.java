@@ -1,10 +1,27 @@
 package com.homedirect.atm.converter.impl;
 
-import com.homedirect.atm.converter.TransactionConverterNew;
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import com.homedirect.atm.converter.TransactionConverter;
 import com.homedirect.atm.model.Transaction;
 import com.homedirect.atm.response.TransactionReponse;
 
-public class TransactionConverterImpl implements TransactionConverterNew {
+@Component
+public class TransactionConverterImpl implements TransactionConverter {
+	
+	public Transaction toTransaction(int fromAccountId, int toAccountId, double amount, byte type, double fee) {
+		Transaction transaction = new Transaction();
+		transaction.setFromAccount(fromAccountId);
+		transaction.setToAccount(toAccountId);
+		transaction.setAmount(amount);
+		transaction.setStatus(Transaction.Status.SUCCESS);
+		transaction.setTransactionType(type);
+		transaction.setRequestDatetime(new Date());
+		transaction.setFee(fee);
+		return transaction;
+	}
 
 	@Override
 	public TransactionReponse toReponse(Transaction transaction) {
@@ -17,5 +34,4 @@ public class TransactionConverterImpl implements TransactionConverterNew {
 		reponse.setRequestDateTime(transaction.getRequestDatetime());
 		return reponse;
 	}
-
 }

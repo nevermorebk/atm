@@ -1,8 +1,10 @@
 package com.homedirect.atm.services.impl;
 
 import com.homedirect.atm.converter.AccountConverter;
+import com.homedirect.atm.converter.TransactionConverter;
 import com.homedirect.atm.model.Account;
-import com.homedirect.atm.model.Transaction.StatusType;
+import com.homedirect.atm.model.Transaction;
+import com.homedirect.atm.model.Transaction.Status;
 import com.homedirect.atm.model.Transaction.TransactionType;
 import com.homedirect.atm.repository.AccountRepository;
 import com.homedirect.atm.request.DepositRequest;
@@ -31,6 +33,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private AccountConverter accountConverter;
+	
+	@Autowired
+	private TransactionConverter transactionConverter;
 
 	@Override
 	@Transactional(rollbackFor = { Exception.class })
@@ -42,8 +47,10 @@ public class PaymentServiceImpl implements PaymentService {
 		account.setAmount(account.getAmount() + request.getAmount());
 		System.out.println(" \n Deposit successfully! \n");
 
-		transactionHistory.saveTransaction(TransactionType.DEPOSIT, request.getId(), NA, request.getAmount(), NO_FEE,
-				TransactionType.DEPOSIT, StatusType.SUCCESS);
+		Transaction transaction = transactionConverter.toTransaction(request.getId(), NA, request.getAmount(), TransactionType.DEPOSIT, FEE);
+		transactionHistory.saveTransaction( request.getId(), NA, request.getAmount(), FEE, TransactionType.DEPOSIT, Status.SUCCESS);
+		transactionConverter.toReponse(transaction);
+		
 		return accountConverter.toResponse(account);
 	}
 
@@ -53,17 +60,17 @@ public class PaymentServiceImpl implements PaymentService {
 		Account account = accountRepository.findById(request.getId());
 		if (accountValidator.isValidPaymentAmount(account, request.getAmount())) {
 			System.out.println(" \n Not enough balance! \n");
-			transactionHistory.saveTransaction(TransactionType.WITHDRAW, request.getId(), NA, request.getAmount(), FEE,
-					TransactionType.DEPOSIT, StatusType.FAILURE);
+//			transactionHistory.saveTransaction(TransactionType.WITHDRAW, request.getId(), NA, request.getAmount(), FEE,
+//					TransactionType.DEPOSIT, StatusType.FAILURE);
 			return null;
 		}
 
 		account.setAmount(account.getAmount() - (request.getAmount() + FEE));
-
 		System.out.println(" \n Withdrawal successfully! \n");
-
-		transactionHistory.saveTransaction(TransactionType.WITHDRAW, request.getId(), NA, request.getAmount(), FEE,
-				TransactionType.WITHDRAW, StatusType.SUCCESS);
+		Transaction transaction = transactionConverter.toTransaction(request.getId(), NA, request.getAmount(), TransactionType.WITHDRAW, FEE);
+		transactionHistory.saveTransaction(request.getId(), NA, request.getAmount(), FEE, TransactionType.WITHDRAW, Status.SUCCESS);
+		transactionConverter.toReponse(transaction);
+		
 		return accountConverter.toResponse(account);
 	}
 
@@ -74,18 +81,19 @@ public class PaymentServiceImpl implements PaymentService {
 		Account fromAccount = accountRepository.findById(request.getFromId());
 		if (accountValidator.isValidPaymentAmount(fromAccount, request.getAmount())) {
 			System.out.println(" \n Not enough balance! \n");
-			transactionHistory.saveTransaction(TransactionType.TRANSFER, request.getFromId(), request.getToId(),
-					request.getAmount(), FEE, TransactionType.TRANSFER, StatusType.FAILURE);
+//			transactionHistory.saveTransaction(TransactionType.TRANSFER, request.getFromId(), request.getToId(),
+//					request.getAmount(), FEE, TransactionType.TRANSFER, StatusType.FAILURE);
 			return null;
 		}
 		
 		toAccount.setAmount(toAccount.getAmount() + request.getAmount());
 		fromAccount.setAmount(fromAccount.getAmount() - (request.getAmount() + FEE));
-
 		System.out.println(" \n Transfer successfully! \n");
 
-		transactionHistory.saveTransaction(TransactionType.RECEIVE, request.getFromId(), request.getToId(), request.getAmount(),
-				FEE, TransactionType.RECEIVE, StatusType.SUCCESS);
+		Transaction transaction = transactionConverter.toTransaction(request.getFromId(), request.getToId(), request.getAmount(), TransactionType.WITHDRAW, FEE);
+		transactionHistory.saveTransaction(request.getFromId(), request.getToId(), request.getAmount(), FEE, TransactionType.TRANSFER, Status.SUCCESS);
+		transactionConverter.toReponse(transaction);
+		
 		return accountConverter.toResponse(fromAccount);
 	}
 }
