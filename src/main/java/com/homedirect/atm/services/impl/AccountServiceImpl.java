@@ -1,12 +1,12 @@
 package com.homedirect.atm.services.impl;
 
-import com.homedirect.atm.converter.AccountConverter;
 import com.homedirect.atm.model.Account;
 import com.homedirect.atm.repository.AccountRepository;
 import com.homedirect.atm.request.AccountRequest;
 import com.homedirect.atm.request.PasswordRequest;
 import com.homedirect.atm.response.AccountResponse;
 import com.homedirect.atm.services.AccountService;
+import com.homedirect.atm.transformer.AccountTransformer;
 import com.homedirect.atm.validator.AccountValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,21 +21,21 @@ public class AccountServiceImpl implements AccountService {
 	private AccountValidator accountValidator;
 
 	@Autowired
-	private AccountConverter accountConverter;
+	private AccountTransformer accountTransformer;
 
 	@Override
 	public AccountResponse createAccount(AccountRequest request) {
 		accountValidator.isvalidCreateAccount(request.getUsername(), request.getPassword());
-		Account account = accountConverter.toAccount(request);
+		Account account = accountTransformer.toAccount(request);
 		accountRepository.save(account);
-		return accountConverter.toResponse(account);
+		return accountTransformer.toResponse(account);
 	}
 
 	@Override
 	public AccountResponse signIn(AccountRequest request) {
 			Account account = accountRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
 			if (request.getUsername().equals(account.getUsername()) && request.getPassword().equals(account.getPassword())) {
-				return accountConverter.toResponse(account);
+				return accountTransformer.toResponse(account);
 			}
 			
 		return null;
@@ -61,6 +61,6 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountResponse getAccountById(int accountId) {
 		Account findAccountById = accountRepository.findById(accountId);
-		return accountConverter.toResponse(findAccountById);
+		return accountTransformer.toResponse(findAccountById);
 	}
 }

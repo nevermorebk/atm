@@ -1,15 +1,16 @@
-package com.homedirect.atm.converter.impl;
+package com.homedirect.atm.transformer.impl;
 
-import com.homedirect.atm.converter.AccountConverter;
 import com.homedirect.atm.model.Account;
 import com.homedirect.atm.request.AccountRequest;
 import com.homedirect.atm.response.AccountResponse;
+import com.homedirect.atm.transformer.AccountTransformer;
+
 import org.springframework.stereotype.Component;
 
 import static com.homedirect.atm.commons.ConfigConstants.DEFAULT_AMOUNT;
 
 @Component
-public class AccountConverterImpl implements AccountConverter {
+public class AccountTransformerImpl implements AccountTransformer {
 
     @Override
     public Account toAccount(AccountRequest request) {

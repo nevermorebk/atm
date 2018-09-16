@@ -1,6 +1,6 @@
 package com.homedirect.atm.controller;
 
-import com.homedirect.atm.model.Transaction;
+import com.homedirect.atm.response.TransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.homedirect.atm.services.TransactionHistoryService;
@@ -13,8 +13,9 @@ public class TransactionController {
 	private @Autowired TransactionHistoryService transactionServive;
 	
 	@GetMapping("/transaction")
-	public List<Transaction> transactionHistory(@RequestParam(value = "id", required = false) Integer id,
+	public List<TransactionResponse> transactionHistory(@RequestParam(value = "accountid", required = false) Integer id,
 												 @RequestParam(value = "type", required = false) Byte type) {
+		
 		return transactionServive.transactionType(id, type);
 	}
 }

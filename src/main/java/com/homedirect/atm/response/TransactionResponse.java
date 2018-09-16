@@ -2,31 +2,22 @@ package com.homedirect.atm.response;
 
 import java.util.Date;
 
-public class TransactionReponse {
+public class TransactionResponse {
 
-	private int id;
 	private int fromAccount;
 	private int toAccount;
 	private byte transactionType;
-	private Date requestDateTime;
 	private double amount;
+	private double fee;
+	private Date requestDateTime;
 	private byte status;
-	private int fee;
 	
-	public int getFee() {
+	public double getFee() {
 		return fee;
 	}
 
-	public void setFee(int fee) {
+	public void setFee(double fee) {
 		this.fee = fee;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getFromAccount() {

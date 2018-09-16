@@ -1,10 +1,11 @@
 package com.homedirect.atm.services.impl;
 
-import com.homedirect.atm.converter.TransactionConverter;
 import com.homedirect.atm.model.Transaction;
 import com.homedirect.atm.repository.TransactionRepository;
-import com.homedirect.atm.response.TransactionReponse;
+import com.homedirect.atm.response.TransactionResponse;
 import com.homedirect.atm.services.TransactionHistoryService;
+import com.homedirect.atm.transformer.TransactionTransformer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
@@ -16,8 +17,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 	@Autowired
 	private TransactionRepository transactionRepository;
 
-//	@Autowired
-//	private TransactionConverter transactionConverter;
+	@Autowired
+	private TransactionTransformer transactionTransformer;
 
 	@Override
 	public Transaction saveTransaction(int fromAccountId, int toAccountId, double amount, double fee, byte type, byte status) {
@@ -34,19 +35,23 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 	}
 	
 	@Override
-	public List<Transaction> transactionType(Integer id, Byte type) {
+	public List<TransactionResponse> transactionType(Integer id, Byte type) {
 		if (id == null && type == null) {
-			return transactionRepository.findAll();
+			List<Transaction> transactions = transactionRepository.findAll();
+			return transactionTransformer.toResponses(transactions);
 		}
 
 		if (type == null) {
-			return transactionRepository.getByFromAccount(id);
+			List<Transaction> transactions = transactionRepository.getByFromAccount(id);
+			return transactionTransformer.toResponses(transactions);
 		}
 
 		if (id == null) {
-			return transactionRepository.getByTransactionType(type);
+			List<Transaction> transactions = transactionRepository.getByTransactionType(type);
+			return transactionTransformer.toResponses(transactions);
 		}
 
-		return transactionRepository.getByFromAccountAndTransactionType(id, type);
+		List<Transaction> transactions = transactionRepository.getByFromAccountAndTransactionType(id, type);
+		return transactionTransformer.toResponses(transactions);
 	}
 }
